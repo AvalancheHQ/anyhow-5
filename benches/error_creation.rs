@@ -1,3 +1,5 @@
+use anyhow::Context;
+
 fn main() {
     divan::main();
 }
@@ -15,7 +17,6 @@ fn create_error_with_context() {
 
 #[divan::bench]
 fn create_and_downcast_error() {
-    use anyhow::Context;
     let err = std::io::Error::new(std::io::ErrorKind::NotFound, "file not found");
     let anyhow_err = anyhow::Error::new(err);
     let _ = divan::black_box(anyhow_err.downcast_ref::<std::io::Error>());
@@ -29,7 +30,6 @@ fn format_error_display() {
 
 #[divan::bench]
 fn error_chain_iteration() {
-    use anyhow::Context;
     let base_err = std::io::Error::new(std::io::ErrorKind::NotFound, "file not found");
     let err = anyhow::Error::new(base_err)
         .context("Failed to read config")
